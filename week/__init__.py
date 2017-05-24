@@ -3,7 +3,7 @@
 # Xiang Wang @ 2017-05-24 13:45:14
 
 
-from week import Week
+from .week import Week
 
 __all__ = [
     'Week'
