@@ -5,5 +5,5 @@
 ```
     from week import Week
     week = Week.thisweek()
-    week.startdatetime
+    week.startdate
 ```
