@@ -8,7 +8,7 @@ from datetime import date
 
 class Week(object):
     """
-        this first monday of a yeaa starts the firt week.
+        this first monday of a year starts the firt week.
         Every week starts from monday and end in sunday.
     """
 
