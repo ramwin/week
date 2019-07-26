@@ -3,8 +3,8 @@
 # Xiang Wang @ 2017-05-24 13:45:14
 
 
-from .week import Week
+from .week import Week, FromFirstDaysWeek
 
 __all__ = [
-    'Week'
+    'Week', 'FromFirstDaysWeek'
 ]

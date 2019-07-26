@@ -11,6 +11,7 @@ class Week(object):
         this first monday of a year starts the firt week.
         Every week starts from monday and end in sunday.
     """
+    _FIRST_ISOWEEKDAY = 1  # the isoweekday of a week's startdate
 
     def __init__(self, year, week):
         """
@@ -21,6 +22,26 @@ class Week(object):
         assert 1 <= week <= 53
         self.year = year
         self.week = week
+
+    def year_start_weekday(self):
+        """
+        return the first weekday of this year
+        monday = 0, sunday = 6
+        """
+        return date(self.year, 1, 1).weekday()
+
+    def year_start_isoweekday(self):
+        """
+        return the frist isoweekday of a year
+        monday = 1, sunday = 7
+        """
+        return date(self.year, 1, 1).isoweekday()
+
+    def is_first_day_match(self):
+        """
+            check if the firstday of this year is the firstday of a week
+        """
+        return self.year_start_isoweekday() == self._FIRST_ISOWEEKDAY
 
     @classmethod
     def create_from_date(cls, date_obj):
@@ -38,6 +59,11 @@ class Week(object):
 
     @property
     def startdate(self):
+        """
+        return exist the firstday of week,
+        ignoring whether if it is in this year.
+        TODO: add parameters to limit the range
+        """
         new_years_day = date(year=self.year, month=1, day=1)
         startdate = new_years_day + \
             datetime.timedelta(days=(7 - new_years_day.weekday()) % 7) + \
@@ -61,7 +87,8 @@ class Week(object):
             datetime.timedelta(days=0, seconds=3600 * 24)
 
     def next_week(self):
-        return Week.create_from_date(self.startdate + datetime.timedelta(days=7))
+        return Week.create_from_date(
+            self.startdate + datetime.timedelta(days=7))
 
     def get_year_week(self):
         week = "%d%02d" % (self.year, self.week)
@@ -99,7 +126,8 @@ class Week(object):
             return True
         elif self.year < week.year:
             return False
-        else: return self.week > week.week
+        else:
+            return self.week > week.week
 
     def __sub__(self, week):
         """calculate the period of two week instance"""
@@ -109,3 +137,56 @@ class Week(object):
 
     def __eq__(self, week):
         return self.get_year_week() == week.get_year_week()
+
+
+class FromFirstDaysWeek(Week):
+    """
+        this first day of a year starts the firt week.
+        Every week starts from monday and end in sunday.
+        year 2019 week 1: date(2019, 1, 1) - date(2019, 1, 6)
+        year 2019 week 2: date(2019, 1, 7) - date(2019, 1, 13)
+        year 2019 week 52: date(2019, 12, 23) - date(2019, 12, 29)
+        year 2019 week 53: date(2019, 12, 30) - date(2019, 12, 31)
+        year 2024 week 1: date(2024, 1, 1) - date(2024, 1, 6)
+    """
+    # TODO test all the other methods,
+    # now I only need to use the startdate and enddate,
+    # the other functions have not been tested
+
+    def __init__(self, year, week):
+        super(FromFirstDaysWeek, self).__init__(year, week)
+
+    @property
+    def startdate(self):
+        """
+        return exist the firstday of week,
+        and makesure it will not exceed this year
+        TODO: add parameters to limit the range or not
+        """
+        if self.is_first_day_match():
+            return max(
+                date(self.year, 1, 1),
+                Week(self.year, self.week).startdate)
+        else:
+            week = Week(self.year, self.week).get_previous_week()
+            return max(date(self.year, 1, 1), week.startdate)
+
+    @property
+    def enddate(self):
+        if self.is_first_day_match():
+            week = Week(self.year, self.week)
+        else:
+            week = Week(self.year, self.week).get_previous_week()
+        return min(date(self.year, 12, 31), week.enddate)
+
+    @classmethod
+    def create_from_date(cls, date_obj):
+        """
+            date: datetime.date
+            eg: week = FromFirstDaysWeek.create_from_date(date(2016, 9, 18))
+        """
+        week = int(date_obj.strftime('%W'))
+        if date(date_obj.year, 1, 1).isoweekday() != cls._FIRST_ISOWEEKDAY:
+            week += 1
+        week_obj = cls(year=date_obj.year, week=week)
+        return week_obj
