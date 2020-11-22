@@ -1,6 +1,7 @@
 #### Xiang Wang @ 2017-05-24 13:40:52
 
 # Documentation
+to see the whole documentation, please click [week.readthedocs.io](https://week.readthedocs.io/en/latest/)
 
 ## Installation
 ```
