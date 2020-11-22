@@ -46,8 +46,10 @@ class Week(object):
     @classmethod
     def create_from_date(cls, date_obj):
         """
-            date: datetime.date
-            example: week = Week.create_from_date(date(2016, 9, 18))
+        - usage::
+
+            week = Week.create_from_date(date(2016, 9, 18))
+
         """
         year = date_obj.year
         week = int(date_obj.strftime('%W'))
@@ -60,8 +62,11 @@ class Week(object):
     @property
     def startdate(self):
         """
-        return exist the firstday of week,
-        ignoring whether if it is in this year.
+        return the first day
+
+        Returns:
+            firstday of week
+
         TODO: add parameters to limit the range
         """
         new_years_day = date(year=self.year, month=1, day=1)
