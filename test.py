@@ -79,7 +79,7 @@ class FromFirstDaysWeekTest(unittest.TestCase):
             )
         self.assertEqual(
             FromFirstDaysWeek.create_from_date(date(2024, 1, 8)),
-            FromFirstDaysWeek(2024, 2)
+            FromFirstDaysWeek(2024, 3)
             )
 
 
