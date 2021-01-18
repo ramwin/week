@@ -27,7 +27,7 @@ Quick Start
     Week.thisweek() == Week.create_from_date(datetime.date.today())
     week = Week.create_from_date(datetime.date(2017, 5, 22)
     week.startdate  # datetime.date(2017, 5, 22)
-    week.+1 == week.get_next_week()
+    week + 1 == week.get_next_week()
 
 
 Indices and tables
